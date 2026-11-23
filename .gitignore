@@ -30,3 +30,8 @@ uploads/
 
 # Agent tooling
 .agents/
+
+# Build/runtime artifacts
+*.db-shm
+*.db-wal
+*.tsbuildinfo
