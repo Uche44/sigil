@@ -1,0 +1,21 @@
+{
+  "id": "medicine",
+  "name": "Medicine",
+  "industry_code": 1,
+  "expiry_required": true,
+  "fields": [
+    { "key": "product_name", "label": "Product name", "type": "text", "required": true },
+    { "key": "manufacturer", "label": "Manufacturer", "type": "text", "required": true },
+    { "key": "regulator_registration_number", "label": "Regulator registration number", "type": "text", "required": true },
+    { "key": "batch_number", "label": "Batch number", "type": "text", "required": true },
+    { "key": "manufacture_date", "label": "Manufacture date", "type": "date", "required": true },
+    { "key": "expiry_date", "label": "Expiry date", "type": "date", "required": true },
+    { "key": "photo", "label": "Product photo", "type": "photo", "required": true }
+  ],
+  "checklist": [
+    "The product name on the pack matches",
+    "The manufacturer name on the pack matches",
+    "The batch number printed on the pack matches",
+    "The expiry date printed on the pack matches"
+  ]
+}

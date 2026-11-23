@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.db
+*.sqlite3
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+
+# Rust / Anchor
+target/
+.anchor/
+test-ledger/
+
+# Local env and uploads
+.env
+.env.local
+.deployer.json
+.producer.json
+uploads/
+*.log
+
+# OS
+.DS_Store
+
+# Agent tooling
+.agents/

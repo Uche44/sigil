@@ -1,0 +1,18 @@
+{
+  "id": "precious",
+  "name": "Precious materials",
+  "industry_code": 4,
+  "expiry_required": false,
+  "fields": [
+    { "key": "item_type", "label": "Item type", "type": "text", "required": true },
+    { "key": "weight", "label": "Weight (grams)", "type": "number", "required": true },
+    { "key": "purity", "label": "Purity", "type": "text", "required": true },
+    { "key": "certificate_reference", "label": "Certificate reference", "type": "text", "required": true },
+    { "key": "photo", "label": "Item photo", "type": "photo", "required": true }
+  ],
+  "checklist": [
+    "The item type matches",
+    "The weight and purity match the certificate",
+    "The certificate reference matches"
+  ]
+}

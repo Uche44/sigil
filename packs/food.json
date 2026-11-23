@@ -1,0 +1,18 @@
+{
+  "id": "food",
+  "name": "Food and drink",
+  "industry_code": 3,
+  "expiry_required": true,
+  "fields": [
+    { "key": "product_name", "label": "Product name", "type": "text", "required": true },
+    { "key": "batch_number", "label": "Batch number", "type": "text", "required": true },
+    { "key": "production_date", "label": "Production date", "type": "date", "required": true },
+    { "key": "expiry_date", "label": "Expiry date", "type": "date", "required": true },
+    { "key": "photo", "label": "Product photo", "type": "photo", "required": true }
+  ],
+  "checklist": [
+    "The product name on the pack matches",
+    "The batch number printed on the pack matches",
+    "The expiry date printed on the pack matches"
+  ]
+}

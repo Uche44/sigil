@@ -1,0 +1,15 @@
+{
+  "id": "generic",
+  "name": "Generic",
+  "industry_code": 0,
+  "expiry_required": false,
+  "fields": [
+    { "key": "product_name", "label": "Product name", "type": "text", "required": true },
+    { "key": "batch_number", "label": "Batch number", "type": "text", "required": true },
+    { "key": "photo", "label": "Product photo", "type": "photo", "required": true }
+  ],
+  "checklist": [
+    "The product name on the pack matches",
+    "The batch number printed on the pack matches"
+  ]
+}
