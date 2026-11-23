@@ -167,6 +167,16 @@ api/.venv/bin/python scripts/solana_admin.py --rpc http://127.0.0.1:8899 \
 Then start the API with `SIGIL_RPC_URL=http://127.0.0.1:8899` and run
 `api/.venv/bin/python scripts/e2e_demo.py --api http://localhost:8000 --rpc http://127.0.0.1:8899`.
 
+## Current devnet deployment
+
+- Program: `A1JYKRSENgPY1Zqa9GjT41m4LuyqMv9dgqeNQ6bSh6HF`
+  ([explorer](https://explorer.solana.com/address/A1JYKRSENgPY1Zqa9GjT41m4LuyqMv9dgqeNQ6bSh6HF?cluster=devnet))
+- Registry: `5DtgKHTnZjSn7KcAxKj3QnSBYK3yTkpjmPEbizpYTYE`
+- Admin/deployer: `49roYvHroMpUQCqXBrvqj8f1BGBrz6sH674SYjQVnT15`
+
+The API and web app read these from `.env` / `apps/web/.env.local`; no code
+changes are needed to point at a different cluster.
+
 ## Demo walkthrough
 
 1. Connect the admin wallet on `/admin` and sign in.
