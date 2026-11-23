@@ -499,6 +499,10 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
                   Your wallet commits the root, details hash, expiry and unit
                   count on-chain. After that, none of it can be edited.
                 </li>
+                <li>
+                  Your wallet pays a small rent deposit for the batch account,
+                  so it needs a little SOL.
+                </li>
               </ul>
             </div>
             {fieldErrors && Object.keys(fieldErrors).length > 0 && (

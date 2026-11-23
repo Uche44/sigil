@@ -44,7 +44,8 @@ export default function ProducerPage() {
           </h1>
           <p className="mt-1 text-sm text-gray-600">
             Register your company, create a batch, print the labels. Every
-            batch is committed from your own wallet.
+            batch is committed from your own wallet. On devnet your wallet needs
+            a little SOL for the rent deposit.
           </p>
         </div>
 

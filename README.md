@@ -41,6 +41,19 @@ The Merkle root is committed on-chain, so the server cannot invent valid serials
 after signing. There is no instruction that can change a batch's root, details
 hash, units or expiry — not even for the admin.
 
+Anyone can check a code without trusting the server:
+
+```
+leaf = SHA-256("sigil:leaf:v1" || batch_pda_bytes || serial_bytes)
+node = SHA-256("sigil:node:v1" || left || right)
+```
+
+The verify response can include the serial's leaf, the proof path and the batch
+PDA. Folding the leaf up the path must equal the Merkle root stored in the batch
+account. Odd levels duplicate the last node. The product details are canonical
+JSON (sorted keys, no whitespace, UTF-8); their SHA-256 must equal the batch's
+`details_hash`.
+
 Shoppers never sign or send a transaction. All writes come from a producer
 wallet (`register_issuer`, `create_batch`, `recall_batch`) or the admin wallet
 (`set_issuer_status`).
@@ -120,7 +133,7 @@ docker run --rm -v "$PWD":/work -w /work \
 
 # 4. initialize the singleton registry (the deployer becomes admin)
 SIGIL_PROGRAM_ID=<deployed id> \
-python scripts/solana_admin.py --keypair .deployer.json init-registry
+  api/.venv/bin/python scripts/solana_admin.py --keypair .deployer.json init-registry
 ```
 
 Or install the matching toolchain on the host:
@@ -132,12 +145,27 @@ sh -c "$(curl -sSfL https://release.anza.xyz/v2.1.21/install)"
 solana config set --url devnet --keypair .deployer.json
 anchor build
 anchor deploy --provider.cluster devnet --provider.wallet .deployer.json
-python scripts/solana_admin.py --keypair .deployer.json init-registry
+api/.venv/bin/python scripts/solana_admin.py --keypair .deployer.json init-registry
 ```
 
 Then set `SIGIL_PROGRAM_ID` and `SIGIL_ADMIN_PUBKEYS` to the deployed program and
 deployer wallet. The admin page also offers a one-click registry initialisation
 if the registry does not exist yet.
+
+If the devnet faucet is rate limited, run the same flow against a local
+validator:
+
+```bash
+solana-test-validator --reset --mint "$(solana-keygen pubkey .deployer.json)" &
+solana airdrop 100 --url localhost --keypair .deployer.json
+anchor build
+anchor deploy --provider.cluster localnet --provider.wallet .deployer.json
+api/.venv/bin/python scripts/solana_admin.py --rpc http://127.0.0.1:8899 \
+  --keypair .deployer.json init-registry
+```
+
+Then start the API with `SIGIL_RPC_URL=http://127.0.0.1:8899` and run
+`api/.venv/bin/python scripts/e2e_demo.py --api http://localhost:8000 --rpc http://127.0.0.1:8899`.
 
 ## Demo walkthrough
 
@@ -151,8 +179,16 @@ if the registry does not exist yet.
    the "compare with your pack" checklist.
 6. Recall the batch from the producer dashboard. The same QR now shows
    `RECALLED` after at most 20 seconds (chain read cache).
-7. Run `python scripts/simulate_scans.py --batch-code <code> --serial <serial>`
+7. Run `api/.venv/bin/python scripts/simulate_scans.py --batch-code <code> --serial <serial>`
    to see `UNUSUAL_ACTIVITY` appear from the scan hints.
+
+`EXPIRED` is covered by the API tests rather than the live walkthrough: the
+program refuses to create a batch that is already past its expiry, which is
+deliberate. To see it live, create a batch expiring today and scan it after
+midnight UTC.
+
+If the devnet faucet rate-limits the deployer, fund it at
+https://faucet.solana.com or use the localnet flow above.
 
 To prove the "new industry, no code change" claim, drop another JSON file in
 `/packs` following the existing shape. The API and wizard pick it up on restart.

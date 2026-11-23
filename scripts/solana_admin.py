@@ -23,9 +23,8 @@ import time
 from pathlib import Path
 
 import httpx
-from solders.account_meta import AccountMeta
 from solders.hash import Hash
-from solders.instruction import Instruction
+from solders.instruction import AccountMeta, Instruction
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solders.transaction import Transaction
@@ -66,7 +65,7 @@ def send(url: str, payer: Keypair, instruction: Instruction) -> str:
     signature = rpc(
         url,
         "sendTransaction",
-        [encoded, {"encoding": "base64", "skipPreflight": False}],
+        [encoded, {"encoding": "base64", "skipPreflight": True}],
     )
     for _ in range(40):
         status = rpc(

@@ -22,8 +22,7 @@ import time
 from pathlib import Path
 
 import httpx
-from solders.account_meta import AccountMeta
-from solders.instruction import Instruction
+from solders.instruction import AccountMeta, Instruction
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 
@@ -260,7 +259,8 @@ def main() -> None:
 
     def check(label: str) -> dict:
         result = api.get(
-            f"/api/v1/verify/{batch['public_code']}/{serial}", proof=True
+            f"/api/v1/verify/{batch['public_code']}/{serial}",
+            params={"proof": "true"},
         )
         print(f"  {label}: {result['verdict']} — {result['message']}")
         return result
@@ -282,6 +282,11 @@ def main() -> None:
     if options.recall:
         print("recall")
         recall_batch(options.rpc, program, producer, batch_address)
+        api.post(
+            f"/api/v1/batches/{prepared['batch_id']}/recall/confirm",
+            {"reason": 1},
+            token=producer_token,
+        )
         time.sleep(3)
         check("after recall")
 

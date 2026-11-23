@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import secrets
@@ -326,10 +327,17 @@ async def confirm_batch(
     if not batch.get("batch_pda"):
         raise ValidationError(["batch has no on-chain address"])
 
-    rpc.forget(batch["batch_pda"])
-    state = await rpc.batch(batch["batch_pda"])
+    state = None
+    for _ in range(10):
+        rpc.forget(batch["batch_pda"])
+        state = await rpc.batch(batch["batch_pda"])
+        if state is not None:
+            break
+        await asyncio.sleep(1)
     if state is None:
-        raise ValidationError(["batch account was not found on chain yet"])
+        raise ValidationError(
+            ["batch account was not found on chain yet; try confirming again"]
+        )
     problems = compare_batch_state(batch, state)
     if problems:
         raise ValidationError(problems)
@@ -406,6 +414,8 @@ def resolve_verdict(
         "leaf": leaf.hex(),
         "root": state.merkle_root.hex(),
         "leaf_index": row["leaf_index"],
+        "batch_pda": batch["batch_pda"],
+        "serial": serial,
         "steps": [step.to_json() for step in proof],
     }
 

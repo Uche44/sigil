@@ -116,15 +116,17 @@ describe("sigil", () => {
     promise: Promise<unknown>,
     code: string
   ): Promise<void> {
+    let message: string | null = null;
     try {
       await promise;
-      assert.fail(`expected failure with ${code}`);
     } catch (error) {
       const err = error as any;
-      const actual =
-        err?.error?.errorCode?.code ?? err?.message ?? String(error);
-      assert.include(String(actual), code);
+      message = String(
+        err?.error?.errorCode?.code ?? err?.message ?? String(error)
+      );
     }
+    assert.isNotNull(message, `expected failure with ${code}`);
+    assert.include(message as string, code);
   }
 
   it("creates the registry once", async () => {
