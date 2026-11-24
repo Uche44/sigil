@@ -56,6 +56,14 @@ SIGIL_CORS_ORIGINS=https://<web-domain>
 `SIGIL_WEB_BASE_URL` is what QR codes encode. `SIGIL_PUBLIC_BASE_URL` is what
 uploaded photo URLs use.
 
+Use a paid RPC for `SIGIL_RPC_URL` (server-side reads). Do **not** put that key
+in the web app: `NEXT_PUBLIC_*` values are shipped to every browser. Keep the
+browser on `https://api.devnet.solana.com`, or use a domain-restricted key.
+
+The blueprint defaults `SIGIL_RPC_URL` to the public devnet endpoint so the
+first deploy works without another account. Replace it with Helius or QuickNode
+before relying on it; the public endpoint occasionally times out.
+
 Wait for the health check on `/api/v1/health`, then open
 `https://<api-domain>/api/v1/config` and confirm the program ID and RPC.
 

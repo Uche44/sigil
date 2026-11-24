@@ -24,7 +24,7 @@ services:
       - key: SIGIL_CHAIN_CACHE
         value: "20"
       - key: SIGIL_RPC_URL
-        sync: false
+        value: https://api.devnet.solana.com
       - key: SIGIL_WEB_BASE_URL
         sync: false
       - key: SIGIL_PUBLIC_BASE_URL
