@@ -442,7 +442,11 @@ async def upload_photo(
     image.thumbnail((1600, 1600))
     name = f"{secrets.token_hex(16)}.jpg"
     image.save(st.settings.uploads_dir / name, format="JPEG", quality=85, optimize=True)
-    return {"url": f"{st.settings.public_base_url}/uploads/{name}"}
+    relative = f"/uploads/{name}"
+    return {
+        "url": relative,
+        "absolute_url": f"{st.settings.public_base_url}{relative}",
+    }
 
 
 # ---------------------------------------------------------------- batches

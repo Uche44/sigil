@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import BN from "bn.js";
-import { api, ApiError, errorMessage, API_URL } from "@/lib/api";
+import { api, ApiError, errorMessage, API_URL, mediaUrl } from "@/lib/api";
 import { downloadWithAuth } from "@/lib/download";
 import { hexToBytes, todayISO } from "@/lib/format";
 import { useProgram } from "@/lib/program";
@@ -345,7 +345,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
                   <div className="flex flex-wrap items-center gap-4">
                     {details[field.key] && (
                       <img
-                        src={details[field.key]}
+                        src={mediaUrl(details[field.key])}
                         alt="Product"
                         className="h-24 w-24 rounded-xl border border-[#eee8f7] object-cover"
                       />
@@ -485,7 +485,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
               </dl>
               {details.photo && (
                 <img
-                  src={details.photo}
+                  src={mediaUrl(details.photo)}
                   alt="Product"
                   className="mt-4 h-24 w-24 rounded-xl object-cover"
                 />

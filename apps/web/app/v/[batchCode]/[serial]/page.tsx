@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { API_URL } from "@/lib/api";
+import { API_URL, mediaUrl } from "@/lib/api";
 import type { VerifyResult } from "@/lib/types";
 
 const TONES = {
@@ -66,8 +66,9 @@ function IssuerBadge({ issuer }: { issuer: VerifyResult["issuer"] }) {
 
 function ProductPhoto({ src, alt }: { src?: string; alt: string }) {
   const [failed, setFailed] = useState(false);
+  const resolved = mediaUrl(src);
 
-  if (!src || failed) {
+  if (!resolved || failed) {
     return (
       <div className="flex h-40 items-center justify-center bg-[radial-gradient(500px_180px_at_50%_0%,#f3edfd,#e4d9f6)]">
         <span className="pill border border-white/80 bg-white/70 text-[#7b68b6]">
@@ -80,7 +81,7 @@ function ProductPhoto({ src, alt }: { src?: string; alt: string }) {
   return (
     <div className="relative h-48 w-full overflow-hidden bg-lav-50">
       <img
-        src={src}
+        src={resolved}
         alt={alt}
         className="h-full w-full object-cover"
         onError={() => setFailed(true)}

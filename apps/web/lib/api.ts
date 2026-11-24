@@ -65,6 +65,26 @@ export async function api<T>(path: string, options: Options = {}): Promise<T> {
   return data as T;
 }
 
+export function mediaUrl(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+  if (value.startsWith("data:")) return value;
+  if (value.startsWith("/")) {
+    return `${API_URL}${value}`;
+  }
+  try {
+    const url = new URL(value);
+    // Uploaded photos are always served by our API. Rewriting the host here
+    // repairs old records created with a localhost/LAN or http base URL,
+    // without changing the on-chain details commitment.
+    if (url.pathname.startsWith("/uploads/")) {
+      return `${API_URL}${url.pathname}`;
+    }
+  } catch {
+    return value;
+  }
+  return value;
+}
+
 export function errorMessage(error: unknown): string {
   if (error instanceof ApiError) {
     if (error.errors && !Array.isArray(error.errors)) {
