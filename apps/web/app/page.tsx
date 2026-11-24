@@ -38,12 +38,12 @@ export default function HomePage() {
           <Link className="btn-primary" href="/producer">
             I am a producer
           </Link>
-          <Link className="btn-secondary" href="/admin">
-            I am an admin
+          <Link className="btn-secondary" href="#how">
+            How a scan works
           </Link>
         </div>
 
-        <section className="mt-12 grid gap-4 sm:grid-cols-3">
+        <section id="how" className="mt-12 grid gap-4 sm:grid-cols-3">
           {STEPS.map((step, index) => (
             <div key={step.title} className="card p-5">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-sm font-bold text-white">

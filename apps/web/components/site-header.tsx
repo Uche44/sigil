@@ -1,6 +1,14 @@
 import Link from "next/link";
 
-export function SiteHeader({ right }: { right?: React.ReactNode }) {
+type Role = "public" | "producer" | "admin";
+
+export function SiteHeader({
+  right,
+  role = "public",
+}: {
+  right?: React.ReactNode;
+  role?: Role;
+}) {
   return (
     <header className="border-b border-gray-200 bg-white/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4">
@@ -11,12 +19,15 @@ export function SiteHeader({ right }: { right?: React.ReactNode }) {
           <span className="text-base font-semibold tracking-tight">Sigil</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-gray-600">
-          <Link href="/producer" className="hover:text-ink">
-            Producer
-          </Link>
-          <Link href="/admin" className="hover:text-ink">
-            Admin
-          </Link>
+          {role === "public" ? (
+            <Link href="/producer" className="hover:text-ink">
+              For producers
+            </Link>
+          ) : (
+            <Link href="/" className="hover:text-ink">
+              How it works
+            </Link>
+          )}
           {right}
         </nav>
       </div>

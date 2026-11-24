@@ -35,7 +35,7 @@ export default function ProducerPage() {
 
   return (
     <div className="min-h-screen">
-      <SiteHeader right={<WalletMultiButton />} />
+      <SiteHeader right={<WalletMultiButton />} role="producer" />
 
       <main className="mx-auto max-w-3xl space-y-5 px-4 py-8">
         <div>

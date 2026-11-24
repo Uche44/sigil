@@ -179,6 +179,10 @@ changes are needed to point at a different cluster.
 
 ## Demo walkthrough
 
+The admin page is deliberately not linked from public pages. Open `/admin`
+directly. That is navigation hygiene, not security: the API checks the admin
+wallet list and the on-chain registry checks its admin account.
+
 1. Connect the admin wallet on `/admin` and sign in.
 2. On `/producer`, connect a different wallet, submit a company profile and
    sign `register_issuer`.
