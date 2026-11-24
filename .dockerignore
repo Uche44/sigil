@@ -1,0 +1,13 @@
+.git
+.agents
+node_modules
+**/node_modules
+apps/web/.next
+target
+api/.venv
+api/*.db
+api/*.db-shm
+api/*.db-wal
+api/uploads
+*.log
+demo-labels.pdf

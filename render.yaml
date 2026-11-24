@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: sigil-api
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    disk:
+      name: sigil-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: SIGIL_PROGRAM_ID
+        value: A1JYKRSENgPY1Zqa9GjT41m4LuyqMv9dgqeNQ6bSh6HF
+      - key: SIGIL_ADMIN_PUBKEYS
+        value: 6H47Ak8vTxy57FeuHgBf5d2R6P2ZLYqRHhCqYQZgfqZp
+      - key: SIGIL_DB_PATH
+        value: /data/sigil.db
+      - key: SIGIL_UPLOADS_DIR
+        value: /data/uploads
+      - key: SIGIL_CHAIN_CACHE
+        value: "20"
+      - key: SIGIL_RPC_URL
+        sync: false
+      - key: SIGIL_WEB_BASE_URL
+        sync: false
+      - key: SIGIL_PUBLIC_BASE_URL
+        sync: false
+      - key: SIGIL_CORS_ORIGINS
+        sync: false
+      - key: SIGIL_TOKEN_SECRET
+        generateValue: true
+      - key: SIGIL_DEVICE_SECRET
+        generateValue: true

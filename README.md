@@ -109,6 +109,12 @@ If the phone and laptop cannot reach each other because the network isolates
 clients, use a phone hotspot or a tunnel (for example a Cloudflare quick
 tunnel). With a tunnel, point both base URLs at the tunnel's web origin.
 
+## Hosting the app
+
+The program runs on devnet; the web app and API still need public hosting. See
+[`DEPLOY.md`](DEPLOY.md) for the recommended Vercel + Render setup, production
+environment variables, domains and the go-live checklist.
+
 ## Deploying the program (devnet)
 
 The program is Anchor 0.31.1, built for Solana CLI 2.1.x.
