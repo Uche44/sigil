@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
@@ -35,6 +35,7 @@ export default function AdminPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestId = useRef(0);
 
   useEffect(() => {
     api<Config>("/api/v1/config").then(setConfig).catch(() => undefined);
@@ -57,18 +58,22 @@ export default function AdminPage() {
 
   const load = useCallback(async () => {
     if (!auth.token) return;
+    const id = ++requestId.current;
     setLoading(true);
     setError(null);
+    setIssuers([]);
     try {
       const result = await api<{ issuers: AdminIssuer[] }>(
         `/api/v1/admin/issuers?status=${tab}`,
         { token: auth.token }
       );
+      if (id !== requestId.current) return;
       setIssuers(result.issuers);
     } catch (err) {
+      if (id !== requestId.current) return;
       setError(errorMessage(err));
     } finally {
-      setLoading(false);
+      if (id === requestId.current) setLoading(false);
     }
   }, [auth.token, tab]);
 
@@ -260,10 +265,10 @@ export default function AdminPage() {
                     <div>
                       <p className="font-semibold">{issuer.profile.name}</p>
                       <p className="hint mt-1">
-                        {issuer.profile.country || "No country"} ·{" "}
-                        <span className="font-mono">
-                          {shortWallet(issuer.wallet, 6)}
-                        </span>
+                        {issuer.profile.country || "No country"}
+                      </p>
+                      <p className="mt-1 break-all font-mono text-xs text-gray-500">
+                        {issuer.wallet}
                       </p>
                     </div>
                     <span
