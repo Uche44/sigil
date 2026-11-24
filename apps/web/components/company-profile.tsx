@@ -110,17 +110,20 @@ export function CompanyProfile({ me, token, config, onChanged }: Props) {
   const tone = statusTone(me.status);
 
   return (
-    <section className="card p-5">
+    <section className="card p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold">Company profile</h2>
-          <p className="hint mt-1">
+          <p className="eyebrow">Company</p>
+          <h2 className="mt-1.5 text-xl font-extrabold tracking-tight">
+            Company profile
+          </h2>
+          <p className="hint mt-1.5">
             Your profile is hashed and committed on-chain. It cannot be edited
             after registration.
           </p>
         </div>
         <span
-          className={`rounded-full border px-3 py-1 text-xs font-semibold ${tone}`}
+          className={`pill border ${tone}`}
         >
           {me.registered ? me.status_label : "Not registered"}
         </span>
@@ -238,7 +241,7 @@ export function CompanyProfile({ me, token, config, onChanged }: Props) {
           </dl>
 
           {!me.registered && (
-            <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
               <p className="text-sm text-amber-900">
                 Profile saved. Sign one transaction to register this wallet as a
                 producer.

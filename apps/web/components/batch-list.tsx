@@ -122,9 +122,9 @@ export function BatchList({ token, refreshKey, onChanged }: Props) {
   }
 
   return (
-    <section className="card p-5">
+    <section className="card p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Batches</h2>
+        <h2 className="text-xl font-extrabold tracking-tight">Batches</h2>
         <button className="btn-secondary" onClick={() => void load()}>
           Refresh
         </button>
@@ -140,7 +140,7 @@ export function BatchList({ token, refreshKey, onChanged }: Props) {
 
       <div className="mt-4 space-y-3">
         {batches.map((batch) => (
-          <article key={batch.id} className="rounded-xl border border-gray-200 p-4">
+          <article key={batch.id} className="rounded-2xl border border-[#eee8f7] bg-[#fbf9ff] p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="font-semibold">
@@ -198,7 +198,7 @@ export function BatchList({ token, refreshKey, onChanged }: Props) {
             </div>
 
             {activity[batch.id] && (
-              <div className="mt-3 rounded-lg bg-gray-50 p-3 text-sm">
+              <div className="mt-3 rounded-2xl bg-lav-50 p-4 text-sm">
                 <p>
                   {activity[batch.id].scans} scans ·{" "}
                   {activity[batch.id].scanned_serials} units scanned

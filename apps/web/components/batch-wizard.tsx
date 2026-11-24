@@ -69,7 +69,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
 
   if (!industry) {
     return (
-      <section className="card p-5">
+      <section className="card p-6">
         <p className="text-sm text-gray-600">No industry packs are loaded.</p>
       </section>
     );
@@ -214,8 +214,8 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
 
   if (!canCreate) {
     return (
-      <section className="card p-5">
-        <h2 className="text-lg font-semibold">Create a batch</h2>
+      <section className="card p-6">
+        <h2 className="text-xl font-extrabold tracking-tight">Create a batch</h2>
         <p className="mt-2 text-sm text-gray-600">
           Batch creation unlocks when an admin verifies your producer profile.
         </p>
@@ -225,20 +225,20 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
 
   if (step === 4 && confirmed) {
     return (
-      <section className="card p-5">
+      <section className="card p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold">Batch registered</h2>
+            <h2 className="text-xl font-extrabold tracking-tight">Batch registered</h2>
             <p className="hint mt-1">
               {confirmed.units} labels are ready. The code is live on-chain.
             </p>
           </div>
-          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+          <span className="pill border border-emerald-200 bg-emerald-50 text-emerald-800">
             Active
           </span>
         </div>
 
-        <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm">
+        <div className="mt-4 rounded-2xl bg-lav-50 p-4 text-sm">
           <p className="font-medium">
             {confirmed.details.product_name || confirmed.details.item_type}
           </p>
@@ -288,18 +288,20 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
   }
 
   return (
-    <section className="card p-5">
+    <section className="card p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">Create a batch</h2>
-        <span className="hint">Step {step + 1} of 4 · {STEPS[step]}</span>
+        <h2 className="text-xl font-extrabold tracking-tight">Create a batch</h2>
+        <span className="pill pill-lav">
+          Step {step + 1} of 4 · {STEPS[step]}
+        </span>
       </div>
 
-      <div className="mt-4 flex gap-1.5">
+      <div className="mt-5 flex gap-1.5">
         {STEPS.map((label, index) => (
           <div
             key={label}
-            className={`h-1.5 flex-1 rounded-full ${
-              index <= step ? "bg-ink" : "bg-gray-200"
+            className={`h-1.5 flex-1 rounded-full transition-colors ${
+              index <= step ? "bg-plum" : "bg-lav-100"
             }`}
           />
         ))}
@@ -312,10 +314,10 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
               <button
                 key={item.id}
                 onClick={() => chooseIndustry(item.id)}
-                className={`rounded-xl border p-4 text-left transition ${
+                className={`rounded-2xl border p-4 text-left transition ${
                   item.id === industryId
-                    ? "border-ink bg-gray-50 ring-1 ring-ink"
-                    : "border-gray-200 hover:border-gray-400"
+                    ? "border-plum bg-lav-50 ring-1 ring-plum"
+                    : "border-[#eee8f7] bg-white hover:border-[#cbbce8]"
                 }`}
               >
                 <p className="font-semibold">{item.name}</p>
@@ -345,7 +347,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
                       <img
                         src={details[field.key]}
                         alt="Product"
-                        className="h-24 w-24 rounded-xl border border-gray-200 object-cover"
+                        className="h-24 w-24 rounded-xl border border-[#eee8f7] object-cover"
                       />
                     )}
                     <input
@@ -405,7 +407,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
               <label className="label">Manufacture date</label>
               {detailManufactured ? (
                 <>
-                  <p className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm">
+                  <p className="rounded-xl border border-[#e7e0f2] bg-lav-50 px-3 py-2.5 text-sm">
                     {detailManufactured}
                   </p>
                   <p className="hint mt-1">
@@ -433,7 +435,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
               </label>
               {detailExpiry ? (
                 <>
-                  <p className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm">
+                  <p className="rounded-xl border border-[#e7e0f2] bg-lav-50 px-3 py-2.5 text-sm">
                     {detailExpiry}
                   </p>
                   <p className="hint mt-1">
@@ -463,7 +465,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
 
         {step === 3 && (
           <div>
-            <div className="rounded-xl border border-gray-200 p-4">
+            <div className="rounded-2xl border border-[#e7e0f2] bg-lav-50 p-5">
               <p className="text-sm font-semibold">
                 {details.product_name || details.item_type || "Product"}
               </p>
@@ -489,7 +491,7 @@ export function BatchWizard({ token, industries, canCreate, onCreated }: Props) 
                 />
               )}
             </div>
-            <div className="mt-4 rounded-xl bg-gray-50 p-4 text-sm text-gray-700">
+            <div className="mt-4 rounded-2xl bg-lav-50 p-4 text-sm text-[#5f5777]">
               Two things happen when you sign:
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>
@@ -597,7 +599,7 @@ function LabelPreview({ batchId, token }: { batchId: number; token: string }) {
             <img
               src={label.src}
               alt={`QR for ${label.serial}`}
-              className="h-24 w-24 rounded-lg border border-gray-200"
+              className="h-24 w-24 rounded-xl border border-[#eee8f7]"
             />
             <p className="mt-1 font-mono text-[10px] text-gray-500">
               {label.serial}

@@ -129,33 +129,43 @@ export default function AdminPage() {
     <div className="min-h-screen">
       <SiteHeader right={<WalletMultiButton />} role="admin" />
 
-      <main className="mx-auto max-w-3xl space-y-5 px-4 py-8">
+      <main className="mx-auto max-w-5xl space-y-5 px-5 py-10 sm:px-8 sm:py-12">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Admin review
+          <p className="eyebrow">Admin</p>
+          <h1 className="display mt-3 text-[2.6rem] sm:text-5xl">
+            Producer <span className="serif">review.</span>
           </h1>
-          <p className="mt-1 text-sm text-gray-600">
-            Verify producers and withdraw verification. Admins can never edit a
-            batch, only issuer status.
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#5f5777]">
+            Verify producers and withdraw verification. The admin can never edit
+            a batch, only issuer status.
           </p>
         </div>
 
         {!connected && (
-          <section className="card p-6 text-center">
-            <p className="text-sm text-gray-600">
-              Connect the admin wallet to review producers.
+          <section className="card p-8 text-center">
+            <p className="eyebrow">Admin access</p>
+            <h2 className="mt-2 text-xl font-extrabold tracking-tight">
+              Connect the admin wallet
+            </h2>
+            <p className="mx-auto mt-2 max-w-sm text-sm text-[#6f6788]">
+              Only the wallet holding the on-chain registry admin role can
+              review producers.
             </p>
-            <div className="mt-4 flex justify-center">
+            <div className="mt-5 flex justify-center">
               <WalletMultiButton />
             </div>
           </section>
         )}
 
         {connected && !auth.token && (
-          <section className="card p-6">
-            <h2 className="text-lg font-semibold">Sign in</h2>
+          <section className="card p-8">
+            <p className="eyebrow">Admin access</p>
+            <h2 className="mt-2 text-xl font-extrabold tracking-tight">Sign in</h2>
+            <p className="mt-2 text-sm text-[#6f6788]">
+              Sign a one-time message. No transaction and no fee.
+            </p>
             <button
-              className="btn-primary mt-3"
+              className="btn-primary mt-4"
               onClick={() => void auth.signIn()}
               disabled={auth.busy}
             >
@@ -171,7 +181,7 @@ export default function AdminPage() {
           <section className="card p-6">
             <p className="text-sm text-red-700">
               This wallet is not on the admin list. Set{" "}
-              <code className="rounded bg-gray-100 px-1">
+              <code className="rounded-md bg-lav-50 px-1.5 py-0.5">
                 SIGIL_ADMIN_PUBKEYS
               </code>{" "}
               on the API to include {shortWallet(auth.me.wallet, 5)}.
@@ -189,9 +199,12 @@ export default function AdminPage() {
         )}
 
         {auth.token && auth.me?.is_admin && registry && !registry.exists && (
-          <section className="card p-5">
-            <h2 className="text-lg font-semibold">Set up the registry</h2>
-            <p className="mt-2 text-sm text-gray-600">
+          <section className="card-lav p-6">
+            <p className="eyebrow text-[#7b68b6]">Setup</p>
+            <h2 className="mt-2 text-xl font-extrabold tracking-tight">
+              Set up the registry
+            </h2>
+            <p className="mt-2 text-sm text-[#5f5777]">
               This program has not been initialised on this cluster. One
               transaction creates the registry and makes this wallet its admin.
             </p>
@@ -228,15 +241,15 @@ export default function AdminPage() {
           registry.wallet_is_admin && (
           <>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex gap-1 rounded-xl bg-gray-100 p-1">
+              <div className="inline-flex gap-1 rounded-full border border-[#eee8f7] bg-white p-1">
                 {TABS.map((item) => (
                   <button
                     key={item}
                     onClick={() => setTab(item)}
-                    className={`rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition ${
+                    className={`rounded-full px-4 py-1.5 text-[12.5px] font-bold capitalize transition ${
                       tab === item
-                        ? "bg-white text-ink shadow-sm"
-                        : "text-gray-600 hover:text-ink"
+                        ? "bg-plum text-white shadow-sm"
+                        : "text-[#6f6788] hover:text-ink"
                     }`}
                   >
                     {item}
@@ -249,32 +262,34 @@ export default function AdminPage() {
             </div>
 
             {error && (
-              <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+              <p className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
                 {error}
               </p>
             )}
-            {loading && <p className="text-sm text-gray-500">Loading…</p>}
+            {loading && <p className="text-sm text-[#8b83a3]">Loading…</p>}
             {!loading && issuers.length === 0 && (
-              <p className="text-sm text-gray-500">Nothing in this list.</p>
+              <p className="rounded-2xl border border-dashed border-[#e2daee] bg-[#fbf9ff] p-6 text-center text-sm text-[#8b83a3]">
+                Nothing in this list.
+              </p>
             )}
 
             <div className="space-y-3">
               {issuers.map((issuer) => (
-                <article key={issuer.wallet} className="card p-5">
+                <article key={issuer.wallet} className="card p-6">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="font-semibold">{issuer.profile.name}</p>
+                      <p className="text-lg font-extrabold tracking-tight">
+                        {issuer.profile.name}
+                      </p>
                       <p className="hint mt-1">
                         {issuer.profile.country || "No country"}
                       </p>
-                      <p className="mt-1 break-all font-mono text-xs text-gray-500">
+                      <p className="mt-1 break-all font-mono text-[11px] text-[#8b83a3]">
                         {issuer.wallet}
                       </p>
                     </div>
                     <span
-                      className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusTone(
-                        issuer.status
-                      )}`}
+                      className={`pill border ${statusTone(issuer.status)}`}
                     >
                       {issuer.status_label}
                     </span>
@@ -282,19 +297,21 @@ export default function AdminPage() {
 
                   <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                     <div>
-                      <dt className="text-gray-500">Regulator numbers</dt>
-                      <dd>
+                      <dt className="text-[#8b83a3]">Regulator numbers</dt>
+                      <dd className="font-medium">
                         {Object.entries(issuer.profile.regulator_numbers)
                           .map(([key, value]) => `${key}: ${value}`)
                           .join(", ") || "—"}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-gray-500">Contact</dt>
-                      <dd>{issuer.profile.contact_email || "—"}</dd>
+                      <dt className="text-[#8b83a3]">Contact</dt>
+                      <dd className="font-medium">
+                        {issuer.profile.contact_email || "—"}
+                      </dd>
                     </div>
                     <div className="sm:col-span-2">
-                      <dt className="text-gray-500">Documents</dt>
+                      <dt className="text-[#8b83a3]">Documents</dt>
                       <dd className="mt-1 space-y-1">
                         {issuer.profile.documents.length === 0 && "—"}
                         {issuer.profile.documents.map((doc) => (
@@ -303,7 +320,7 @@ export default function AdminPage() {
                             href={doc}
                             target="_blank"
                             rel="noreferrer"
-                            className="block truncate text-blue-700 underline"
+                            className="block truncate text-[13px] font-semibold text-violet underline decoration-violet/30"
                           >
                             {doc}
                           </a>

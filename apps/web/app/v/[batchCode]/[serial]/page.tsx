@@ -8,40 +8,43 @@ import type { VerifyResult } from "@/lib/types";
 
 const TONES = {
   red: {
-    card: "border-red-300 bg-red-50 text-red-950",
-    icon: "bg-red-600 text-white",
-    detail: "text-red-800",
+    card: "border-[#efc7ce] bg-[#fbeef0] text-[#481d27]",
+    icon: "bg-[#7b2739] text-white",
+    detail: "text-[#8b4a57]",
+    soft: "bg-white/60",
   },
   amber: {
-    card: "border-amber-300 bg-amber-50 text-amber-950",
-    icon: "bg-amber-500 text-white",
-    detail: "text-amber-800",
+    card: "border-[#ead6ab] bg-[#fbf3e2] text-[#4b3812]",
+    icon: "bg-[#a97b20] text-white",
+    detail: "text-[#8a6a25]",
+    soft: "bg-white/60",
   },
   green: {
-    card: "border-emerald-300 bg-emerald-50 text-emerald-950",
-    icon: "bg-emerald-600 text-white",
-    detail: "text-emerald-800",
+    card: "border-[#c3e2d2] bg-[#edf7f1] text-[#173d2c]",
+    icon: "bg-[#2f6b4f] text-white",
+    detail: "text-[#3f7a5e]",
+    soft: "bg-white/60",
   },
 } as const;
 
 function VerdictIcon({ verdict }: { verdict: string }) {
   if (verdict === "REGISTERED") {
     return (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.4">
         <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     );
   }
   if (verdict === "UNUSUAL_ACTIVITY") {
     return (
-      <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2.2">
+      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.1">
         <path d="M12 4l9 16H3L12 4z" strokeLinejoin="round" />
         <path d="M12 10v4M12 17h.01" strokeLinecap="round" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.4">
       <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
     </svg>
   );
@@ -55,9 +58,35 @@ function IssuerBadge({ issuer }: { issuer: VerifyResult["issuer"] }) {
       ? "border-red-200 bg-red-50 text-red-800"
       : "border-amber-200 bg-amber-50 text-amber-800";
   return (
-    <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${style}`}>
+    <span className={`rounded-full border px-2.5 py-1 text-[10.5px] font-bold ${style}`}>
       {issuer.label}
     </span>
+  );
+}
+
+function ProductPhoto({ src, alt }: { src?: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (!src || failed) {
+    return (
+      <div className="flex h-40 items-center justify-center bg-[radial-gradient(500px_180px_at_50%_0%,#f3edfd,#e4d9f6)]">
+        <span className="pill border border-white/80 bg-white/70 text-[#7b68b6]">
+          No product photo
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-48 w-full overflow-hidden bg-lav-50">
+      <img
+        src={src}
+        alt={alt}
+        className="h-full w-full object-cover"
+        onError={() => setFailed(true)}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+    </div>
   );
 }
 
@@ -80,11 +109,13 @@ export default function ShopperPage() {
       .then(async (response) => {
         const body = await response.json().catch(() => null);
         if (!response.ok) {
-          throw new Error(
+          const message =
             typeof body?.detail === "string"
               ? body.detail
-              : `Could not check this code (${response.status})`
-          );
+              : body?.error === "chain unavailable"
+                ? "The Solana RPC is temporarily unavailable. Try again in a moment."
+                : `Could not check this code (${response.status})`;
+          throw new Error(message);
         }
         if (!cancelled) setResult(body as VerifyResult);
       })
@@ -100,63 +131,66 @@ export default function ShopperPage() {
   }, [params.batchCode, params.serial]);
 
   return (
-    <div className="min-h-screen bg-paper">
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex h-14 max-w-xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-ink text-xs font-bold text-white">
-              S
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-30 border-b border-[#eee8f7] bg-paper/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-2xl items-center justify-between px-4">
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="grid h-8 w-8 place-items-center rounded-[11px] bg-plum text-[13px] text-white">
+              ✦
             </span>
-            <span className="text-sm font-semibold">Sigil</span>
+            <span className="text-sm font-extrabold tracking-tight">Sigil</span>
           </Link>
-          <span className="text-xs text-gray-500">Product check</span>
+          <span className="pill pill-lav">Product check</span>
         </div>
       </header>
 
-      <main className="mx-auto max-w-xl space-y-4 px-4 py-6">
+      <main className="mx-auto max-w-2xl space-y-4 px-4 py-6">
         {loading && (
           <div className="card animate-pulse p-6">
-            <div className="h-6 w-40 rounded bg-gray-200" />
-            <div className="mt-3 h-4 w-64 rounded bg-gray-100" />
+            <div className="h-7 w-44 rounded-full bg-lav-100" />
+            <div className="mt-4 h-4 w-64 rounded-full bg-lav-50" />
+            <div className="mt-2 h-4 w-52 rounded-full bg-lav-50" />
           </div>
         )}
 
         {error && !loading && (
-          <div className="rounded-2xl border border-red-300 bg-red-50 p-5 text-red-950">
-            <h1 className="text-lg font-bold">Could not check this code</h1>
-            <p className="mt-1 text-sm text-red-800">{error}</p>
-            <p className="mt-3 text-sm text-red-800">
+          <div className="rounded-[24px] border border-[#efc7ce] bg-[#fbeef0] p-6 text-[#481d27]">
+            <p className="eyebrow text-[#8b4a57]">Scan result</p>
+            <h1 className="display mt-2 text-3xl">Could not check this code</h1>
+            <p className="mt-3 text-sm leading-relaxed text-[#8b4a57]">{error}</p>
+            <p className="mt-4 rounded-xl bg-white/60 p-3 text-[12.5px] leading-relaxed">
               This does not mean the product is fake. Check the address in your
-              phone's browser and try the code printed under the QR.
+              phone&rsquo;s browser and try the code printed under the QR.
             </p>
           </div>
         )}
 
         {result && !loading && (
           <>
-            <section className={`rounded-2xl border p-5 ${TONES[result.tone].card}`}>
+            <section className={`rounded-[26px] border p-5 shadow-[0_20px_50px_-40px_rgba(32,26,53,0.7)] sm:p-6 ${TONES[result.tone].card}`}>
               <div className="flex items-start gap-4">
                 <span
-                  className={`mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${TONES[result.tone].icon}`}
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${TONES[result.tone].icon}`}
                   aria-hidden
                 >
                   <VerdictIcon verdict={result.verdict} />
                 </span>
-                <div>
-                  <p className={`text-xs font-semibold uppercase tracking-wide ${TONES[result.tone].detail}`}>
-                    Scan result
-                  </p>
-                  <h1 className="mt-0.5 text-2xl font-bold leading-tight">
+                <div className="min-w-0">
+                  <p className={`eyebrow ${TONES[result.tone].detail}`}>Scan result</p>
+                  <h1 className="display mt-1 text-[2rem] leading-[1.02]">
                     {result.label}
                   </h1>
-                  <p className="mt-2 text-sm leading-relaxed">{result.message}</p>
+                  <p className="mt-2.5 text-[13px] leading-relaxed opacity-90">
+                    {result.message}
+                  </p>
                 </div>
               </div>
             </section>
 
             {result.registered_line && (
-              <section className="rounded-2xl border border-gray-200 bg-white p-5">
-                <p className="text-sm font-medium leading-relaxed">
+              <section className="card p-5">
+                <p className="eyebrow">The registered record</p>
+                <p className="mt-2.5 text-[14px] font-medium leading-relaxed text-[#3b3452]">
                   {result.registered_line}
                 </p>
               </section>
@@ -164,29 +198,29 @@ export default function ShopperPage() {
 
             {result.product && Object.keys(result.product).length > 0 && (
               <section className="card overflow-hidden">
-                {result.product.photo && (
-                  <img
+                {result.product.photo ? (
+                  <ProductPhoto
                     src={result.product.photo}
-                    alt="Product"
-                    className="h-48 w-full object-cover"
+                    alt={result.product.product_name || "Product"}
                   />
-                )}
+                ) : null}
                 <div className="p-5">
-                  <h2 className="font-semibold">
+                  <p className="eyebrow">Registered product</p>
+                  <h2 className="mt-2 text-xl font-extrabold tracking-tight">
                     {result.product.product_name ||
                       result.product.item_type ||
                       "Registered product"}
                   </h2>
-                  <dl className="mt-4 grid gap-3 text-sm">
+                  <dl className="mt-4 divide-y divide-[#f0ebf8] text-[13px]">
                     {Object.entries(result.field_labels)
                       .filter(
                         ([key]) =>
                           key !== "photo" && result.product[key] !== undefined
                       )
                       .map(([key, label]) => (
-                        <div key={key} className="flex justify-between gap-4">
-                          <dt className="text-gray-500">{label}</dt>
-                          <dd className="text-right font-medium">
+                        <div key={key} className="flex justify-between gap-4 py-2.5">
+                          <dt className="text-[#8b83a3]">{label}</dt>
+                          <dd className="text-right font-bold text-[#3b3452]">
                             {result.product[key]}
                           </dd>
                         </div>
@@ -197,43 +231,39 @@ export default function ShopperPage() {
             )}
 
             <section className="card p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Producer
-                  </p>
-                  <p className="mt-1 font-semibold">
+                  <p className="eyebrow">Producer</p>
+                  <p className="mt-2 text-lg font-extrabold tracking-tight">
                     {result.issuer?.name || "Name not provided"}
                   </p>
                 </div>
                 <IssuerBadge issuer={result.issuer} />
               </div>
-              <p className="mt-3 text-xs text-gray-500">
-                Verification is carried out by Sigil's admin. It means the
-                producer's documents were reviewed, not that this pack is
+              <p className="mt-4 rounded-xl bg-lav-50 px-3 py-2.5 text-[11.5px] leading-relaxed text-[#7d7595]">
+                Verification means the producer&rsquo;s documents were reviewed
+                by Sigil&rsquo;s admin. It does not mean this physical pack is
                 genuine.
               </p>
             </section>
 
             {result.batch && (
               <section className="card p-5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Registered batch
-                </p>
-                <dl className="mt-3 grid gap-2 text-sm">
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-gray-500">Batch number</dt>
-                    <dd className="font-medium">{result.batch.batch_number}</dd>
+                <p className="eyebrow">Batch</p>
+                <dl className="mt-3 divide-y divide-[#f0ebf8] text-[13px]">
+                  <div className="flex justify-between gap-4 py-2.5">
+                    <dt className="text-[#8b83a3]">Batch number</dt>
+                    <dd className="font-bold">{result.batch.batch_number}</dd>
                   </div>
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-gray-500">Expiry</dt>
-                    <dd className="font-medium">
+                  <div className="flex justify-between gap-4 py-2.5">
+                    <dt className="text-[#8b83a3]">Expiry</dt>
+                    <dd className="font-bold">
                       {result.batch.expires_at ?? "No expiry"}
                     </dd>
                   </div>
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-gray-500">Batch code</dt>
-                    <dd className="font-mono text-xs">
+                  <div className="flex justify-between gap-4 py-2.5">
+                    <dt className="text-[#8b83a3]">Batch code</dt>
+                    <dd className="rounded-md bg-lav-50 px-2 py-0.5 font-mono text-[11px] text-[#5a5274]">
                       {result.batch.public_code}
                     </dd>
                   </div>
@@ -243,24 +273,32 @@ export default function ShopperPage() {
 
             {result.checklist.length > 0 && (
               <section className="card p-5">
-                <h2 className="font-semibold">Compare with your pack</h2>
-                <ul className="mt-3 space-y-2">
+                <h2 className="text-lg font-extrabold tracking-tight">
+                  Compare with your pack
+                </h2>
+                <p className="hint mt-1">Tick only what matches your pack.</p>
+                <ul className="mt-4 space-y-2">
                   {result.checklist.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm">
-                      <input
-                        type="checkbox"
-                        className="mt-0.5 h-4 w-4 rounded border-gray-300"
-                      />
-                      <span>{item}</span>
+                    <li key={item}>
+                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#eee8f7] bg-[#fbf9ff] p-3 text-[13px] leading-relaxed transition hover:border-[#d9ccf2]">
+                        <input
+                          type="checkbox"
+                          className="mt-0.5 h-4 w-4 rounded border-gray-300"
+                        />
+                        <span>{item}</span>
+                      </label>
                     </li>
                   ))}
                 </ul>
               </section>
             )}
 
-            <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-950">
-              <h2 className="font-semibold">What this check cannot tell you</h2>
-              <ul className="mt-2 list-disc space-y-1 pl-5">
+            <section className="card-dark p-5">
+              <p className="eyebrow text-white/40">The honest part</p>
+              <h2 className="mt-2 text-lg font-extrabold tracking-tight text-white">
+                What this check cannot tell you
+              </h2>
+              <ul className="mt-3 space-y-2.5 text-[12px] leading-relaxed text-white/65">
                 <li>
                   A QR code cannot prove which physical pack it is stuck on. A
                   copied code on a fake of the same product looks identical here.
@@ -277,24 +315,24 @@ export default function ShopperPage() {
 
             {result.proof && (
               <details className="card p-5 text-sm">
-                <summary className="cursor-pointer font-medium">
+                <summary className="cursor-pointer font-bold">
                   Check this yourself
                 </summary>
-                <p className="mt-3 text-gray-600">
-                  The batch Merkle root is stored on Solana. This code's serial
-                  hashes to a leaf, and the proof below folds up to that root.
-                  Anyone can recompute it.
+                <p className="mt-3 text-[12.5px] leading-relaxed text-[#7d7595]">
+                  The batch Merkle root is stored on Solana. This code&rsquo;s
+                  serial hashes to a leaf, and the proof below folds up to that
+                  root. Anyone can recompute it.
                 </p>
-                <pre className="mt-3 max-h-80 overflow-auto rounded-lg bg-gray-950 p-3 text-[10px] leading-relaxed text-gray-100">
+                <pre className="mt-3 max-h-80 overflow-auto rounded-xl bg-plum p-3 text-[10px] leading-relaxed text-lav-100">
                   {JSON.stringify(result.proof, null, 2)}
                 </pre>
               </details>
             )}
 
-            <p className="px-1 text-xs leading-relaxed text-gray-500">
+            <p className="px-2 pb-4 text-center text-[10.5px] leading-relaxed text-[#9a92ad]">
               This scan was logged with a coarse region and a device hash. We do
-              not store your IP address or precise location, and scan records
-              are deleted after 90 days. No account, no app, no wallet.
+              not store your IP address or precise location, and scan records are
+              deleted after 90 days. No account, no app, no wallet.
             </p>
           </>
         )}
