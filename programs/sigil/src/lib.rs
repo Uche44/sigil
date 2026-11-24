@@ -75,6 +75,21 @@ pub mod sigil {
         Ok(())
     }
 
+    /// Current admin hands the registry to another wallet. The program upgrade
+    /// authority is unchanged; this only moves the operational admin role.
+    pub fn set_registry_admin(ctx: Context<SetRegistryAdmin>, new_admin: Pubkey) -> Result<()> {
+        let registry = &mut ctx.accounts.registry;
+        let old_admin = registry.admin;
+        registry.admin = new_admin;
+
+        emit!(RegistryAdminChanged {
+            registry: registry.key(),
+            old_admin,
+            new_admin,
+        });
+        Ok(())
+    }
+
     /// The producer commits a batch. Only immutable fields are written here.
     pub fn create_batch(
         ctx: Context<CreateBatch>,
@@ -234,6 +249,13 @@ pub struct SetIssuerStatus<'info> {
 }
 
 #[derive(Accounts)]
+pub struct SetRegistryAdmin<'info> {
+    #[account(mut, has_one = admin)]
+    pub registry: Account<'info, Registry>,
+    pub admin: Signer<'info>,
+}
+
+#[derive(Accounts)]
 #[instruction(nonce: u64)]
 pub struct CreateBatch<'info> {
     #[account(has_one = authority)]
@@ -272,6 +294,13 @@ pub struct IssuerStatusChanged {
     pub issuer: Pubkey,
     pub old_status: u8,
     pub new_status: u8,
+}
+
+#[event]
+pub struct RegistryAdminChanged {
+    pub registry: Pubkey,
+    pub old_admin: Pubkey,
+    pub new_admin: Pubkey,
 }
 
 #[event]

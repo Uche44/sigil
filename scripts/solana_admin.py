@@ -7,6 +7,7 @@ Usage:
   python scripts/solana_admin.py init-registry
   python scripts/solana_admin.py registry-info
   python scripts/solana_admin.py set-issuer-status <wallet> <0|1|2>
+  python scripts/solana_admin.py set-registry-admin <wallet>
   python scripts/solana_admin.py issuer-info <wallet>
 """
 
@@ -147,7 +148,7 @@ def main() -> None:
     parser.add_argument("--keypair", type=Path, default=DEFAULT_KEYPAIR)
     parser.add_argument(
         "command",
-        choices=["init-registry", "registry-info", "set-issuer-status", "issuer-info"],
+        choices=["init-registry", "registry-info", "set-issuer-status", "set-registry-admin", "issuer-info"],
     )
     parser.add_argument("args", nargs="*")
     options = parser.parse_args()
@@ -197,6 +198,22 @@ def main() -> None:
             print("issuer does not exist")
             return
         print(json.dumps(decode_issuer(data), indent=2))
+        return
+
+    if options.command == "set-registry-admin":
+        if len(options.args) != 1:
+            raise SystemExit("usage: set-registry-admin <wallet>")
+        new_admin = Pubkey.from_string(options.args[0])
+        instruction = Instruction(
+            program,
+            disc("set_registry_admin") + bytes(new_admin),
+            [
+                AccountMeta(registry, False, True),
+                AccountMeta(keypair.pubkey(), True, False),
+            ],
+        )
+        signature = send(options.rpc, keypair, instruction)
+        print(f"registry admin -> {new_admin} ({signature})")
         return
 
     if options.command == "set-issuer-status":

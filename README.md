@@ -172,7 +172,20 @@ Then start the API with `SIGIL_RPC_URL=http://127.0.0.1:8899` and run
 - Program: `A1JYKRSENgPY1Zqa9GjT41m4LuyqMv9dgqeNQ6bSh6HF`
   ([explorer](https://explorer.solana.com/address/A1JYKRSENgPY1Zqa9GjT41m4LuyqMv9dgqeNQ6bSh6HF?cluster=devnet))
 - Registry: `5DtgKHTnZjSn7KcAxKj3QnSBYK3yTkpjmPEbizpYTYE`
-- Admin/deployer: `49roYvHroMpUQCqXBrvqj8f1BGBrz6sH674SYjQVnT15`
+- Operational admin: `6H47Ak8vTxy57FeuHgBf5d2R6P2ZLYqRHhCqYQZgfqZp`
+- Upgrade authority/deployer: `49roYvHroMpUQCqXBrvqj8f1BGBrz6sH674SYjQVnT15`
+
+The admin role can be handed to another wallet without redeploying:
+
+```bash
+api/.venv/bin/python scripts/solana_admin.py \
+  --keypair .deployer.json \
+  set-registry-admin <new-admin-wallet>
+```
+
+Then update `SIGIL_ADMIN_PUBKEYS` in `.env` to the same wallet and restart the
+API. The upgrade authority stays with the deployer, so the deployer can still
+upgrade the program but cannot verify issuers or recall anything.
 
 The API and web app read these from `.env` / `apps/web/.env.local`; no code
 changes are needed to point at a different cluster.

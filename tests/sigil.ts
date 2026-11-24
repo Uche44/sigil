@@ -296,4 +296,37 @@ describe("sigil", () => {
       "ConstraintHasOne"
     );
   });
+
+  it("rotates the registry admin and the old admin loses authority", async () => {
+    const newAdmin = Keypair.generate();
+    await airdrop(newAdmin.publicKey);
+
+    await program.methods
+      .setRegistryAdmin(newAdmin.publicKey)
+      .accounts({ registry: registryPda, admin: admin.publicKey })
+      .signers([admin])
+      .rpc();
+
+    const registry = await program.account.registry.fetch(registryPda);
+    assert.ok(registry.admin.equals(newAdmin.publicKey));
+
+    const producer = Keypair.generate();
+    await airdrop(producer.publicKey);
+    const issuer = await registerIssuer(producer);
+
+    await expectFailure(
+      setStatus(issuer, STATUS_VERIFIED, admin),
+      "ConstraintHasOne"
+    );
+
+    await setStatus(issuer, STATUS_VERIFIED, newAdmin);
+    const account = await program.account.issuer.fetch(issuer);
+    assert.equal(account.status, STATUS_VERIFIED);
+
+    await program.methods
+      .setRegistryAdmin(admin.publicKey)
+      .accounts({ registry: registryPda, admin: newAdmin.publicKey })
+      .signers([newAdmin])
+      .rpc();
+  });
 });

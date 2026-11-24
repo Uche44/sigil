@@ -315,6 +315,42 @@
           "type": "u8"
         }
       ]
+    },
+    {
+      "name": "set_registry_admin",
+      "docs": [
+        "Current admin hands the registry to another wallet. The program upgrade",
+        "authority is unchanged; this only moves the operational admin role."
+      ],
+      "discriminator": [
+        128,
+        28,
+        97,
+        136,
+        251,
+        178,
+        39,
+        206
+      ],
+      "accounts": [
+        {
+          "name": "registry",
+          "writable": true
+        },
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "registry"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -409,6 +445,19 @@
         61,
         237,
         157
+      ]
+    },
+    {
+      "name": "RegistryAdminChanged",
+      "discriminator": [
+        214,
+        7,
+        161,
+        150,
+        107,
+        101,
+        30,
+        241
       ]
     }
   ],
@@ -683,6 +732,26 @@
           {
             "name": "bump",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RegistryAdminChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "registry",
+            "type": "pubkey"
+          },
+          {
+            "name": "old_admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_admin",
+            "type": "pubkey"
           }
         ]
       }
