@@ -1,5 +1,7 @@
 # Going live
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Uche44/sigil)
+
 The Solana program is already deployed on **devnet**, so going live means
 hosting the web app and API, pointing a domain at them, and regenerating labels
 so the QRs use that domain.
