@@ -188,7 +188,10 @@ class RpcReader:
             "params": [address, {"encoding": "base64", "commitment": "confirmed"}],
         }
         async with httpx.AsyncClient(timeout=15) as client:
-            response = await client.post(self.rpc_url, json=payload)
+            try:
+                response = await client.post(self.rpc_url, json=payload)
+            except httpx.HTTPError as exc:
+                raise ChainError(f"RPC request failed: {exc}") from exc
         if response.status_code != 200:
             raise ChainError(f"RPC returned HTTP {response.status_code}")
         body = response.json()

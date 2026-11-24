@@ -98,9 +98,16 @@ Open http://localhost:3000.
 
 To scan from a phone on the same network, set `SIGIL_WEB_BASE_URL` and
 `SIGIL_PUBLIC_BASE_URL` to the machine's LAN address (for example
-`http://192.168.1.20:3000` and `http://192.168.1.20:8000`), start Next with
-`npm run dev -- -H 0.0.0.0`, and use that LAN address in `NEXT_PUBLIC_API_URL`.
-The QR labels are generated from `SIGIL_WEB_BASE_URL`.
+`http://192.168.1.20:3000` and `http://192.168.1.20:8000`), add that web origin
+to `SIGIL_CORS_ORIGINS`, start the API with `--host 0.0.0.0`, start Next with
+`npm run dev -- -H 0.0.0.0`, and use the LAN API address in
+`NEXT_PUBLIC_API_URL`. The QR labels are generated from `SIGIL_WEB_BASE_URL`, so
+download them again after changing it; labels printed with `localhost` cannot be
+fixed.
+
+If the phone and laptop cannot reach each other because the network isolates
+clients, use a phone hotspot or a tunnel (for example a Cloudflare quick
+tunnel). With a tunnel, point both base URLs at the tunnel's web origin.
 
 ## Deploying the program (devnet)
 

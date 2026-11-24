@@ -35,3 +35,6 @@ uploads/
 *.db-shm
 *.db-wal
 *.tsbuildinfo
+
+# Generated demo artifacts
+demo-labels.pdf
