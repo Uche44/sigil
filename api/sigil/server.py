@@ -377,7 +377,33 @@ async def submit_issuer(
     chain = await st.rpc.issuer(issuer_pda)
 
     existing = get_issuer(st.conn, wallet)
-    if existing and chain is not None:
+
+    if chain is not None:
+        chain_hash = chain.name_hash.hex()
+        if existing is not None and existing["name_hash"] != chain_hash:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "This wallet's stored profile does not match its on-chain "
+                    "commitment. Use the original profile or a new wallet."
+                ),
+            )
+        if name_hash != chain_hash:
+            raise HTTPException(
+                status_code=409,
+                detail=(
+                    "This wallet is already registered on-chain with a different "
+                    "company profile. On-chain profiles cannot be changed; use a "
+                    "new wallet."
+                ),
+            )
+        if existing is None:
+            with st.conn:
+                st.conn.execute(
+                    "INSERT INTO issuers (authority, name_hash, profile_json, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                    (wallet, name_hash, profile_json, now(), now()),
+                )
+            existing = get_issuer(st.conn, wallet)
         return {
             "issuer": _issuer_payload(request, wallet, existing, chain.status),
             "instruction": None,
@@ -397,7 +423,7 @@ async def submit_issuer(
 
     issuer = get_issuer(st.conn, wallet)
     return {
-        "issuer": _issuer_payload(request, wallet, issuer, chain.status if chain else None),
+        "issuer": _issuer_payload(request, wallet, issuer, None),
         "instruction": {
             "program_id": st.settings.program_id,
             "registry": derive_registry_pda(st.settings.program_id),
