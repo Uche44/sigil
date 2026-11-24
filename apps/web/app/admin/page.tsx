@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletButton } from "@/components/wallet-button";
 import { PublicKey, SystemProgram } from "@solana/web3.js";
 import { SiteHeader } from "@/components/site-header";
 import { api, errorMessage } from "@/lib/api";
@@ -127,7 +127,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen">
-      <SiteHeader right={<WalletMultiButton />} role="admin" />
+      <SiteHeader right={<WalletButton />} role="admin" />
 
       <main className="mx-auto max-w-5xl space-y-5 px-5 py-10 sm:px-8 sm:py-12">
         <div>
@@ -152,7 +152,7 @@ export default function AdminPage() {
               review producers.
             </p>
             <div className="mt-5 flex justify-center">
-              <WalletMultiButton />
+              <WalletButton />
             </div>
           </section>
         )}

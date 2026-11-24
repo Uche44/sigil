@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletButton } from "@/components/wallet-button";
 import { SiteHeader } from "@/components/site-header";
 import { CompanyProfile } from "@/components/company-profile";
 import { BatchWizard } from "@/components/batch-wizard";
@@ -74,7 +74,7 @@ function AuthGate({
               {busy ? "Waiting for wallet…" : "Sign in with wallet"}
             </button>
           ) : (
-            <WalletMultiButton />
+            <WalletButton />
           )}
           {connected && (
             <button className="btn-secondary" onClick={disconnect}>
@@ -114,7 +114,7 @@ export default function ProducerPage() {
 
   return (
     <div className="min-h-screen">
-      <SiteHeader right={<WalletMultiButton />} role="producer" />
+      <SiteHeader right={<WalletButton />} role="producer" />
 
       <main className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-12">
         <div className="flex flex-wrap items-end justify-between gap-5">
