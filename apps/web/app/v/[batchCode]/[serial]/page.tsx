@@ -136,9 +136,11 @@ export default function ShopperPage() {
       <header className="sticky top-0 z-30 border-b border-[#eee8f7] bg-paper/85 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-2xl items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-[11px] bg-plum text-[13px] text-white">
-              ✦
-            </span>
+            <img
+              src="/sigil-logo.png"
+              alt=""
+              className="h-8 w-8 rounded-[11px] object-cover"
+            />
             <span className="text-sm font-extrabold tracking-tight">Sigil</span>
           </Link>
           <span className="pill pill-lav">Product check</span>

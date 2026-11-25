@@ -13,9 +13,11 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 border-b border-[#eee8f7] bg-paper/80 backdrop-blur-xl">
       <div className="mx-auto flex h-[76px] max-w-6xl items-center justify-between gap-3 px-5 sm:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-[13px] bg-plum text-[16px] leading-none text-white shadow-[0_10px_20px_-12px_rgba(42,35,66,0.9)]">
-            ✦
-          </span>
+          <img
+            src="/sigil-logo.png"
+            alt=""
+            className="h-9 w-9 rounded-[13px] object-cover shadow-[0_10px_20px_-12px_rgba(42,35,66,0.9)]"
+          />
           <span className="flex flex-col leading-none">
             <span className="text-[16px] font-extrabold tracking-[-0.03em]">
               Sigil
