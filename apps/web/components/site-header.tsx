@@ -16,7 +16,7 @@ export function SiteHeader({
           <img
             src="/sigil-logo.png"
             alt=""
-            className="h-9 w-9 rounded-[13px] object-cover shadow-[0_10px_20px_-12px_rgba(42,35,66,0.9)]"
+            className="h-10 w-10 rounded-[14px] object-cover shadow-[0_10px_20px_-12px_rgba(42,35,66,0.9)]"
           />
           <span className="flex flex-col leading-none">
             <span className="text-[16px] font-extrabold tracking-[-0.03em]">

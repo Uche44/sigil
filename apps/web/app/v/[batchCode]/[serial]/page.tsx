@@ -139,7 +139,7 @@ export default function ShopperPage() {
             <img
               src="/sigil-logo.png"
               alt=""
-              className="h-8 w-8 rounded-[11px] object-cover"
+              className="h-9 w-9 rounded-[12px] object-cover"
             />
             <span className="text-sm font-extrabold tracking-tight">Sigil</span>
           </Link>
